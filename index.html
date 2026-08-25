@@ -1,65 +1,85 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hỗ trợ Viết Sáng Kiến Kinh Nghiệm & Soạn Giáo Án</title>
-    <style>
-        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
-        body {background: #f0f9ff; padding:20px; line-height:1.8;}
-        .container {max-width:1200px; margin:0 auto; background:#fff; padding:40px; border-radius:20px; box-shadow:0 4px 20px rgba(0,0,0,0.1);}
-        h1 {color:#008850; text-align:center; margin-bottom:15px; font-size:28px;}
-        .subtitle {text-align:center; color:#666; margin-bottom:40px; font-size:16px;}
-        .box {background: #f8fafc; padding:30px; border-radius:15px; margin:25px 0; border-left:5px solid #008850;}
-        h2 {color:#0066cc; margin-bottom:20px; font-size:22px;}
-        ul {padding-left:25px; margin-top:15px;}
-        li {margin:10px 0; font-size:16px;}
-        .footer {text-align:center; margin-top:50px; color:#888; font-size:14px; padding-top:20px; border-top:1px solid #eee;}
-        a {color:#0066cc; text-decoration:none;}
-        a:hover {text-decoration:underline;}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🎓 Hỗ trợ Viết Sáng Kiến Kinh Nghiệm & Soạn Giáo Án Điện Tử</h1>
-        <p class="subtitle">Nền tảng hỗ trợ chuyên môn chuẩn mực cho giáo viên và cán bộ quản lý</p>
-        
-        <div class="box">
-            <h2>📝 Viết Sáng Kiến Kinh Nghiệm</h2>
-            <p>Giải pháp toàn diện giúp giáo viên và cán bộ hành chính xây dựng, chỉnh sửa và xuất bản sáng kiến kinh nghiệm đạt chuẩn theo quy định.</p>
-            <ul>
-                <li>✅ Mẫu chuẩn M1 & M2 theo quy định Bộ GD&ĐT</li>
-                <li>✅ Trợ lý AI thông minh — gợi ý nội dung chi tiết, cấu trúc bài viết</li>
-                <li>✅ Xuất Word / PDF chuyên nghiệp — tự động tạo mục lục, chữ ký, ngày tháng</li>
-                <li>✅ Lưu lịch sử, chỉnh sửa, chia sẻ dễ dàng</li>
-            </ul>
-        </div>
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import NotFound from "@/pages/NotFound";
+import { Redirect, Route, Switch } from "wouter";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import Home from "./pages/Home";
+import { INDEPENDENT_APP_PATHS } from "@/lib/appRoutes";
+import AuthorProfile from "@/pages/AuthorProfile";
+import AdminMessages from "@/pages/AdminMessages";
+import AdminLicenses from "@/pages/AdminLicenses";
+import LessonPlans from "@/pages/LessonPlans";
+import LessonPlanEditor from "@/pages/LessonPlanEditor";
+import LessonPlanLibrary from "@/pages/LessonPlanLibrary";
+import Curriculum from "@/pages/Curriculum";
+import SchoolSettings from "@/pages/SchoolSettings";
+import MiniGames from "./pages/MiniGames";
+import MiniGameDrafts from "./pages/MiniGameDrafts";
+import MiniGameResults from "./pages/MiniGameResults";
+import MiniGamePlayer from "./pages/MiniGamePlayer";
+import SharedMiniGame from "./pages/SharedMiniGame";
+import SkknDashboard from "./pages/Dashboard";
+import SkknEditor from "./pages/Editor";
+import SkknTemplates from "./pages/Templates";
+import SkknDraftPreview from "@/pages/DraftPreview";
+import SocialMetadata from "@/components/SocialMetadata";
 
-        <div class="box">
-            <h2>📖 Soạn Giáo Án Điện Tử</h2>
-            <p>Kiến tạo những giờ học sinh động, truyền cảm hứng với sự hỗ trợ của AI, kho học liệu phong phú và tích hợp trò chơi tương tác.</p>
-            <ul>
-                <li>✅ Đa dạng cấp học: Mầm non, Tiểu học, THCS, THPT</li>
-                <li>✅ Bối cảnh địa phương — tích hợp ngữ văn, văn hóa vùng miền</li>
-                <li>✅ Mini game tương tác — trò chơi trắc nghiệm, thử sinh, ghép cặp, điền từ</li>
-                <li>✅ Kho học liệu phong phú, cập nhật chương trình mới nhất</li>
-            </ul>
-        </div>
+function Router() {
+  return (
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/lesson-plans" component={LessonPlans} />
+      <Route path="/lesson-plans/:id" component={LessonPlanEditor} />
+      <Route path="/lesson-plan-library" component={LessonPlanLibrary} />
+      <Route path="/curriculum" component={Curriculum} />
+      <Route path="/school-settings" component={SchoolSettings} />
+      <Route path="/mini-games" component={MiniGames} />
+      <Route path="/mini-game-drafts" component={MiniGameDrafts} />
+      <Route path="/mini-game-results" component={MiniGameResults} />
+      <Route path="/mini-games/:planId/play" component={MiniGamePlayer} />
+      <Route path="/lesson-game/:token" component={SharedMiniGame} />
+      <Route path="/author" component={AuthorProfile} />
+      <Route path="/admin/messages" component={AdminMessages} />
+      <Route path="/admin/licenses" component={AdminLicenses} />
 
-        <div class="box">
-            <h2>💡 Tính Năng Nổi Bật</h2>
-            <ul>
-                <li>🔒 Bảo mật thông tin — dữ liệu được mã hóa</li>
-                <li>📱 Hoàn toàn tương thích trên máy tính, điện thoại, máy tính bảng</li>
-                <li>🌐 Truy cập mọi lúc, mọi nơi — không giới hạn thiết bị</li>
-                <li>🆓 Hoàn toàn miễn phí cho giáo viên và cán bộ quản lý</li>
-            </ul>
-        </div>
+      {/* Dedicated SKKN workspace. It intentionally lives beside, not inside, Lesson Plan Studio. */}
+      <Route path="/skkn">
+        <Redirect to="/skkn/dashboard" />
+      </Route>
+      <Route path="/skkn/dashboard" component={SkknDashboard} />
+      <Route path="/skkn/editor/:id" component={SkknEditor} />
+      <Route path="/skkn/templates" component={SkknTemplates} />
+      <Route path="/skkn/view/:id" component={SkknDraftPreview} />
+      <Route path="/skkn/shared/:token" component={SkknDraftPreview} />
+      <Route path="/skkn/author" component={AuthorProfile} />
+      <Route path="/skkn/admin/messages" component={AdminMessages} />
+      <Route path="/skkn/admin/licenses" component={AdminLicenses} />
 
-        <div class="footer">
-            <p>© 2026 Nền tảng hỗ trợ chuyên môn — Phiên bản miễn phí trên GitHub Pages</p>
-            <p>Liên hệ hỗ trợ: <a href="mailto:support@example.com">support@example.com</a></p>
-        </div>
-    </div>
-</body>
-</html>
+      {/* Old SKKN bookmarks are canonicalized into /skkn; lesson-plan URLs remain untouched. */}
+      <Route path="/dashboard"><Redirect to="/skkn/dashboard" /></Route>
+      <Route path="/editor/:id">{params => <Redirect to={`/skkn/editor/${params.id}`} />}</Route>
+      <Route path="/templates"><Redirect to="/skkn/templates" /></Route>
+      <Route path="/view/:id">{params => <Redirect to={`/skkn/view/${params.id}`} />}</Route>
+      <Route path="/shared/:token">{params => <Redirect to={`/skkn/shared/${params.token}`} />}</Route>
+      <Route path="/404" component={NotFound} />
+      <Route component={NotFound} />
+    </Switch>
+  );
+}
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="light">
+        <TooltipProvider>
+          <Toaster />
+          <SocialMetadata />
+          <Router />
+        </TooltipProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
+  );
+}
+
+export default App;

@@ -1,85 +1,386 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Redirect, Route, Switch } from "wouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import { INDEPENDENT_APP_PATHS } from "@/lib/appRoutes";
-import AuthorProfile from "@/pages/AuthorProfile";
-import AdminMessages from "@/pages/AdminMessages";
-import AdminLicenses from "@/pages/AdminLicenses";
-import LessonPlans from "@/pages/LessonPlans";
-import LessonPlanEditor from "@/pages/LessonPlanEditor";
-import LessonPlanLibrary from "@/pages/LessonPlanLibrary";
-import Curriculum from "@/pages/Curriculum";
-import SchoolSettings from "@/pages/SchoolSettings";
-import MiniGames from "./pages/MiniGames";
-import MiniGameDrafts from "./pages/MiniGameDrafts";
-import MiniGameResults from "./pages/MiniGameResults";
-import MiniGamePlayer from "./pages/MiniGamePlayer";
-import SharedMiniGame from "./pages/SharedMiniGame";
-import SkknDashboard from "./pages/Dashboard";
-import SkknEditor from "./pages/Editor";
-import SkknTemplates from "./pages/Templates";
-import SkknDraftPreview from "@/pages/DraftPreview";
-import SocialMetadata from "@/components/SocialMetadata";
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hỗ trợ Sáng Kiến Kinh Nghiệm & Giáo Án Điện Tử</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Khai báo biến màu sắc */
+        :root {
+            --primary-green: #008850;
+            --primary-blue: #0066cc;
+            --text-dark: #333;
+            --text-light: #fff;
+            --bg-light: #f4f7f6;
+            --transition: all 0.3s ease;
+        }
 
-function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/lesson-plans" component={LessonPlans} />
-      <Route path="/lesson-plans/:id" component={LessonPlanEditor} />
-      <Route path="/lesson-plan-library" component={LessonPlanLibrary} />
-      <Route path="/curriculum" component={Curriculum} />
-      <Route path="/school-settings" component={SchoolSettings} />
-      <Route path="/mini-games" component={MiniGames} />
-      <Route path="/mini-game-drafts" component={MiniGameDrafts} />
-      <Route path="/mini-game-results" component={MiniGameResults} />
-      <Route path="/mini-games/:planId/play" component={MiniGamePlayer} />
-      <Route path="/lesson-game/:token" component={SharedMiniGame} />
-      <Route path="/author" component={AuthorProfile} />
-      <Route path="/admin/messages" component={AdminMessages} />
-      <Route path="/admin/licenses" component={AdminLicenses} />
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      {/* Dedicated SKKN workspace. It intentionally lives beside, not inside, Lesson Plan Studio. */}
-      <Route path="/skkn">
-        <Redirect to="/skkn/dashboard" />
-      </Route>
-      <Route path="/skkn/dashboard" component={SkknDashboard} />
-      <Route path="/skkn/editor/:id" component={SkknEditor} />
-      <Route path="/skkn/templates" component={SkknTemplates} />
-      <Route path="/skkn/view/:id" component={SkknDraftPreview} />
-      <Route path="/skkn/shared/:token" component={SkknDraftPreview} />
-      <Route path="/skkn/author" component={AuthorProfile} />
-      <Route path="/skkn/admin/messages" component={AdminMessages} />
-      <Route path="/skkn/admin/licenses" component={AdminLicenses} />
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            scroll-behavior: smooth;
+        }
 
-      {/* Old SKKN bookmarks are canonicalized into /skkn; lesson-plan URLs remain untouched. */}
-      <Route path="/dashboard"><Redirect to="/skkn/dashboard" /></Route>
-      <Route path="/editor/:id">{params => <Redirect to={`/skkn/editor/${params.id}`} />}</Route>
-      <Route path="/templates"><Redirect to="/skkn/templates" /></Route>
-      <Route path="/view/:id">{params => <Redirect to={`/skkn/view/${params.id}`} />}</Route>
-      <Route path="/shared/:token">{params => <Redirect to={`/skkn/shared/${params.token}`} />}</Route>
-      <Route path="/404" component={NotFound} />
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
+        /* Header & Navigation */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
 
-function App() {
-  return (
-    <ErrorBoundary>
-      <ThemeProvider defaultTheme="light">
-        <TooltipProvider>
-          <Toaster />
-          <SocialMetadata />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
-}
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1200px;
+            margin: auto;
+        }
 
-export default App;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-blue) 100%);
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-light);
+            padding: 0 20px;
+            margin-top: 60px;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #fff;
+            color: var(--primary-green);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            color: var(--primary-blue);
+        }
+
+        /* Container Section */
+        .section {
+            padding: 80px 5%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--primary-green);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary-blue);
+            border-radius: 2px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            border-bottom: 4px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-bottom: 4px solid var(--primary-blue);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-green);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        /* Specific Section Colors */
+        #skkn { background-color: #fff; }
+        #giaoan { background-color: #f9f9f9; }
+
+        .icon-blue { color: var(--primary-blue) !important; }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: #fff;
+            padding: 50px 5% 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: auto;
+            margin-bottom: 30px;
+        }
+
+        .social-links a {
+            color: #fff;
+            font-size: 1.5rem;
+            margin: 0 15px;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--primary-green);
+        }
+
+        .copyright {
+            border-top: 1px solid #555;
+            padding-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive Mobile */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* Ẩn menu trên mobile để tối giản */
+            }
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .section {
+                padding: 50px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="#" class="logo">
+                <i class="fas fa-graduation-cap"></i> EduSupport
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Trang chủ</a></li>
+                <li><a href="#skkn">Sáng kiến kinh nghiệm</a></li>
+                <li><a href="#giaoan">Giáo án điện tử</a></li>
+                <li><a href="#contact">Liên hệ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Nâng Tầm Chuyên Môn Sư Phạm</h1>
+            <p>Chúng tôi đồng hành cùng quý thầy cô trong việc hoàn thiện hồ sơ chuyên môn, sáng tạo bài giảng số và đúc kết kinh nghiệm giảng dạy chuyên nghiệp.</p>
+            <a href="#skkn" class="btn">Khám phá ngay</a>
+        </div>
+    </section>
+
+    <!-- Phần 1: Viết Sáng Kiến Kinh Nghiệm -->
+    <section class="section" id="skkn">
+        <div class="section-title">
+            <h2>Viết Sáng Kiến Kinh Nghiệm</h2>
+            <p>Giải pháp tối ưu giúp thầy cô hoàn thành những công trình nghiên cứu sư phạm chất lượng.</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-lightbulb"></i>
+                <h3>Tư vấn chọn đề tài</h3>
+                <p>Gợi ý những đề tài mới lạ, mang tính thực tiễn cao và phù hợp với thực tế giảng dạy tại địa phương.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-file-signature"></i>
+                <h3>Hướng dẫn cấu trúc</h3>
+                <p>Hỗ trợ xây dựng đề cương chi tiết, đúng chuẩn quy định của Bộ Giáo dục và Đào tạo cho từng cấp học.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Xử lý số liệu</h3>
+                <p>Hỗ trợ thiết kế bảng biểu, biểu đồ minh chứng và phân tích số liệu thực nghiệm khoa học, thuyết phục.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-check-double"></i>
+                <h3>Chỉnh sửa & Hoàn thiện</h3>
+                <p>Kiểm tra lỗi chính tả, định dạng văn bản chuẩn và rà soát đạo văn giúp nội dung đạt kết quả cao nhất.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phần 2: Soạn Giáo Án Điện Tử -->
+    <section class="section" id="giaoan">
+        <div class="section-title">
+            <h2>Soạn Giáo Án Điện Tử</h2>
+            <p>Biến những tiết học trở nên sinh động và thu hút học sinh bằng công nghệ số.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-desktop icon-blue"></i>
+                <h3>Thiết kế PowerPoint</h3>
+                <p>Xây dựng slide bài giảng đẹp mắt, chuyên nghiệp với các hiệu ứng chuyển động tinh tế, hiện đại.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-gamepad icon-blue"></i>
+                <h3>Trò chơi tương tác</h3>
+                <p>Tích hợp các trò chơi học tập trên Quizizz, Kahoot, Wordwall giúp không khí lớp học luôn sôi nổi.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-video icon-blue"></i>
+                <h3>Số hóa học liệu</h3>
+                <p>Hỗ trợ biên tập video clip, xử lý âm thanh và hình ảnh minh họa sắc nét cho bài dạy Elearning.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-layer-group icon-blue"></i>
+                <h3>Giáo án 5512</h3>
+                <p>Soạn thảo kế hoạch bài dạy theo định hướng phát triển năng lực, bám sát khung chương trình GDPT mới.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <h3>EduSupport - Đồng hành cùng Giáo viên Việt</h3>
+            <p style="margin: 15px 0;">Email: hotro@giaovien.com | Hotline: 0123 456 789</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-zalo"></i></a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 EduSupport. Tất cả quyền được bảo lưu.
+        </div>
+    </footer>
+
+    <!-- JavaScript cho hiệu ứng cuộn mượt và tương tác nhẹ -->
+    <script>
+        // Hiệu ứng thay đổi màu Header khi cuộn
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.padding = '0.5rem 5%';
+                header.style.backgroundColor = '#fdfdfd';
+            } else {
+                header.style.padding = '1rem 5%';
+                header.style.backgroundColor = '#fff';
+            }
+        });
+
+        // Hiệu ứng xuất hiện dần cho các Card khi cuộn chuột đến
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
